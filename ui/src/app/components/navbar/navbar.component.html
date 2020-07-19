@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" ref="home">Kanban Board</a>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav" *ngIf="hasAuthenticated()">
+      <a class="nav-item nav-link" routerLink="home" routerLinkActive="active"
+        >Home <span class="sr-only">(current)</span></a
+      >
+      <a class="nav-item nav-link" routerLink="board" routerLinkActive="active"
+        >Create Board</a
+      >
+      <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="navbarDropdown"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Select Board
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" *ngFor="let name of boardNames">{{name}}</a>
+        </div>
+      </li>
+      <button (click)="signout()">log out</button>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,69 @@
+<div class="d-flex">
+  <div class="container mt-3" style="width: 100px, height: 100px">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">To Dos</h5>
+        <div
+          cdkDropList
+          id="todos"
+          [cdkDropListData]="todos"
+          [cdkDropListConnectedTo]="['inprogress', 'done']"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            *ngFor="let task of todos"
+            class="list-group-item p-3 justify-content-between"
+            cdkDrag
+          >
+            {{ task.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mt-3" style="width: 100px, height: 100px">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">In Progress</h5>
+        <div
+          cdkDropList
+          id="inprogress"
+          [cdkDropListData]="inprogress"
+          [cdkDropListConnectedTo]="['todos', 'done']"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            *ngFor="let task of inprogress"
+            class="list-group-item p-3 justify-content-between"
+            cdkDrag
+          >
+            {{ task.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-3" style="width: 100px, height: 100px">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Done</h5>
+        <div
+          cdkDropList
+          id="done"
+          [cdkDropListData]="done"
+          [cdkDropListConnectedTo]="['inprogress', 'todos']"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            *ngFor="let task of done"
+            class="list-group-item p-3 justify-content-between"
+            cdkDrag
+          >
+            {{ task.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
