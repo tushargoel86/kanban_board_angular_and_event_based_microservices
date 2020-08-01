@@ -35,8 +35,49 @@ user: test@gmail.com
 password: abcd1234
 
 
-### Screenshots
+I have completed board and tasks part. Due to time crunch, I have dropped idea to add websocketgateway. Following are the functionality available now:
+### For Board
+1. Create Board
+2. Delete Board (API is added but UI is not added)
 
- ![](https://github.com/tushargoel86/kanban_board_angular_and_event_based_microservices/blob/master/LoginAndKanbanBoard.gif)
- 
-I have completed Login and Board Creation part. I will complete Board listing and Task part next week.
+### Tasks
+1. Create Task
+2. Move Task between states
+3. Delete Task
+4. Edit Task (API is added but UI is not added)
+
+
+### UI server ####
+as social login requires https connection, hence you need to start node server using SSL option
+
+```
+ng serve --ssl
+```
+### Backend API
+We have 4 microservices:
+1. For Board command
+2. For Board Query
+3. For Task Command
+4. For Task Query
+
+### AXON server
+Download axon server from here https://axoniq.io/download
+unzip it and start server using below command. It will start server at default port 8024/8124 which will be listen by above microservices.
+
+```
+java -jar axonserver.jar
+```
+
+### RabbitMQ server
+I have used RabbiMQ docker image
+```
+docker pull rabbitmq
+docker run -d --hostname my-rabbit --name some-rabbit -p 15672:15672  -p 5672:5672 rabbitmq:3-management
+ ```
+
+
+Complete demo is ![here](https://github.com/tushargoel86/kanban_board_angular_and_event_based_microservices/blob/master/images/bandicam%202020-08-01%2017-04-01-734.mp4)
+
+
+
+
