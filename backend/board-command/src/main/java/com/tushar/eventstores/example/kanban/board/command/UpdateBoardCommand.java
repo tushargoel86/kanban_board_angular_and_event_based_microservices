@@ -9,15 +9,11 @@ import lombok.Setter;
 @Setter
 public class UpdateBoardCommand extends BoardCommand<String> {
 
-	private String title;
-
 	private LocalDate updatedAt;
-
 	private String updatedBy;
 
-	public UpdateBoardCommand(String id, String title, LocalDate updatedAt, String updatedBy) {
-		super(id);
-		this.title = title;
+	public UpdateBoardCommand(String title, LocalDate updatedAt, String updatedBy) {
+		super(title);
 		this.updatedBy = updatedBy;
 		this.updatedAt = updatedAt;
 	}

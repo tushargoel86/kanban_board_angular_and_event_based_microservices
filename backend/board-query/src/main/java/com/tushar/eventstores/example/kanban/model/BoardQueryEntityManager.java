@@ -23,32 +23,24 @@ public class BoardQueryEntityManager {
 
 	@EventHandler
 	void on(CreateBoardEvent event) {
-		String id = event.getId().toString();
+		String title = event.getBoardTitle();
 		
-		//System.out.println(event.getId() + " " + event.getCreatedBy() + "  " + event.getCreatedAt());
-		//Board board = getBoardFromEvent(id);
-		BoardQueryEntity queryEntity = boardRepository.findById(id).orElse(new BoardQueryEntity());
+		BoardQueryEntity queryEntity = boardRepository.findById(title).orElse(new BoardQueryEntity());
 		
-		queryEntity.setId(id);
 		queryEntity.setCreatedDate(event.getCreatedAt());
 		queryEntity.setCreatedBy(event.getCreatedBy());
-		queryEntity.setTitle(event.getTitle());
-		//queryEntity.setUpdatedBy(event.getUpdatedBy());
-	//	queryEntity.setUpdatedDate(event.getUpdatedDate());
+		queryEntity.setBoardTitle(event.getBoardTitle());
 		
 		boardRepository.save(queryEntity);
 	}
 	
 	@EventHandler
 	void on(UpdateBoardEvent event) {
-		String id = event.getId().toString();
+		String title = event.getBoardTitle();
 		
-		//System.out.println(event.getId() + " " + event.getCreatedBy() + "  " + event.getCreatedAt());
-		//Board board = getBoardFromEvent(id);
-		BoardQueryEntity queryEntity = boardRepository.findById(id).orElse(new BoardQueryEntity());
+		BoardQueryEntity queryEntity = boardRepository.findById(title).orElse(new BoardQueryEntity());
 		
-		queryEntity.setId(id);
-		queryEntity.setTitle(event.getTitle());
+		queryEntity.setBoardTitle(event.getBoardTitle());
 		queryEntity.setUpdatedBy(event.getUpdatedBy());
 		queryEntity.setUpdatedDate(event.getUpdatedAt());
 		

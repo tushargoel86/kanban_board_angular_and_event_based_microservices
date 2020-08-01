@@ -8,6 +8,6 @@ import lombok.Data;
 public class BoardCommand<T> {
 
 	@TargetAggregateIdentifier
-	public final T id;
+	public final T title;
 	
 }

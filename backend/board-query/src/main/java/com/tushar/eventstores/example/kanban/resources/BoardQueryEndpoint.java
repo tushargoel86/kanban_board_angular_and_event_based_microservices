@@ -26,14 +26,18 @@ public class BoardQueryEndpoint {
 	}
 	
 
-	@PostMapping("/{id}")
-	public BoardQueryEntity getBoard(@PathVariable String id) {
-		return boardQueryService.getBoard(id);
+	@GetMapping("/{title}")
+	@CrossOrigin(origins = "https://localhost:4200")
+	public List<BoardQueryEntity> getBoard(@PathVariable String title) {
+		if (title == null) throw new IllegalArgumentException("board title is required");
+		return boardQueryService.getBoard(title);
 	}
 	
-	@RequestMapping("/{id}/events")
-	public List<Object> listAllEventsForBoard(@PathVariable String id) {
-		return boardQueryService.listBoardEvents(id);
+	@GetMapping("/{title}/events")
+	@CrossOrigin(origins = "https://localhost:4200")
+	public List<Object> listAllEventsForBoard(@PathVariable String title) {
+		if (title == null) throw new IllegalArgumentException("board title is required");
+		return boardQueryService.listBoardEvents(title);
 	}
 	
 	@GetMapping("/")

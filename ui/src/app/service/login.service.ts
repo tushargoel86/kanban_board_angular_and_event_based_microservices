@@ -57,9 +57,7 @@ export class LoginService  {
   }
  
   signOut(): void {
-    console.log(localStorage.getItem('APP_TOKEN'));
-    
-    if(localStorage.getItem('APP_TOKEN')) {
+    if(localStorage.getItem('APP_TOKEN') !== null) {
       localStorage.removeItem('APP_TOKEN');
       this.authService.signOut();
     }

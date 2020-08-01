@@ -1,33 +1,28 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { KanbanService } from 'src/app/service/kanban.service';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class BoardComponent implements OnInit {
+  constructor(private kanbanService: KanbanService, private router: Router) {}
 
-  constructor(private kanbanService: KanbanService) { }
-
-  ngOnInit(): void {
-    console.log('board is loaded');
-  }
+  ngOnInit(): void {}
 
   submitBoard(event, userName: string, title: string) {
-    event.preventDefault();    
-    this.kanbanService.createBoard(userName, title).subscribe(inp => {
-      if (inp !== null)
-        alert('board is creared succesfullly');
-    },
-    error => { 
-      alert(error.error.message)
-    }
+    event.preventDefault();
+    this.kanbanService.createBoard(userName, title).subscribe(
+      (inp) => {
+        if (inp !== null) alert('board is creared succesfullly');
+        let url = '/board/' + title;
+        this.router.navigate([url]);
+      },
+      (error) => {
+        alert(JSON.stringify(error.error));
+      }
     );
-
-   
   }
-
 }

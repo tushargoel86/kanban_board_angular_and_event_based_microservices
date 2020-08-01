@@ -9,15 +9,12 @@ import lombok.Setter;
 @Setter
 public class CreateBoardEvent extends BoardEvent<String>{
 	
-	private String title;
-	
 	private LocalDate createdAt;
 	
 	private String createdBy;
 
-	public CreateBoardEvent(String id, String title, LocalDate createdAt, String createdBy) {
-		super(id);
-		this.title = title;
+	public CreateBoardEvent(String title, LocalDate createdAt, String createdBy) {
+		super(title);
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 	}

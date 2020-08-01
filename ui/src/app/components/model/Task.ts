@@ -1,7 +1,8 @@
 import { TaskType } from './TaskType';
 
 export default interface Task {
-    id: number,
+    taskId: string,
+    boardTitle: string, 
     description: string,
-    status: TaskType
+    taskType: TaskType
 }

@@ -9,15 +9,12 @@ import lombok.Setter;
 @Setter
 public class CreateBoardCommand extends BoardCommand<String> {
 
-	private String title;
-
 	private LocalDate createdAt;
 
 	private String createdBy;
 
-	public CreateBoardCommand(String id, String title, LocalDate createdAt, String createdBy) {
-		super(id);
-		this.title = title;
+	public CreateBoardCommand(String title, LocalDate createdAt, String createdBy) {
+		super(title);
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 	}

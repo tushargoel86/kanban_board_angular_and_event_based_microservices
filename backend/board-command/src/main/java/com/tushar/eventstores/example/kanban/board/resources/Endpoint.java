@@ -6,16 +6,14 @@ import java.util.concurrent.CompletableFuture;
 
 import javax.validation.Valid;
 
-import org.axonframework.axonserver.connector.command.AxonServerRemoteCommandHandlingException;
-import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.modelling.command.AggregateLifecycle;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tushar.eventstores.example.kanban.board.command.UpdateBoardCommand;
 import com.tushar.eventstores.example.kanban.board.dto.CreateBoardDTO;
 import com.tushar.eventstores.example.kanban.board.dto.UpdateBoardDTO;
-import com.tushar.eventstores.example.kanban.board.exception.BoardAlreadyAvailableException;
 import com.tushar.eventstores.example.kanban.board.response.Response;
 import com.tushar.eventstores.example.kanban.board.service.BoardService;
 
@@ -48,10 +46,18 @@ public class Endpoint {
 						HttpStatus.CONFLICT));
 	}
 
-	@PutMapping("/")
+	@PutMapping("/{title}")
 	@CrossOrigin(origins = "https://localhost:4200")
-	public CompletableFuture<String> updateBoard(@Valid @RequestBody UpdateBoardDTO updateBoardDTO) {
-		return boardService.updateBoard(updateBoardDTO);
+	public CompletableFuture<String> updateBoard(@PathVariable String title, @Valid @RequestBody UpdateBoardDTO dto) {
+		if (title == null) throw new IllegalArgumentException("board id is required");
+		return boardService.updateBoard(new UpdateBoardCommand(title,
+				dto.getUpdatedAt(), dto.getUpdatedBy()));
+	}
+	
+	@DeleteMapping("/{title}")
+	@CrossOrigin(origins = "https://localhost:4200")
+	public CompletableFuture<String> deleteBoard(@PathVariable String title) {
+		return boardService.deleteBoard(title);
 	}
 
 	@ResponseStatus(HttpStatus.PRECONDITION_FAILED)

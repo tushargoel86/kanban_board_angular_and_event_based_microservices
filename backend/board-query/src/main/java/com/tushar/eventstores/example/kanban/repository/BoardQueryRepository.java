@@ -11,7 +11,11 @@ import com.tushar.eventstores.example.kanban.model.BoardQueryEntity;
 @Repository
 public interface BoardQueryRepository extends JpaRepository<BoardQueryEntity, String> {
 
-	@Query("select title from BoardQueryEntity")
+	@Query("select boardTitle from BoardQueryEntity")
 	List<String> findAllBoards();
+	
+
+	@Query("from BoardQueryEntity where boardTitle = :title")
+	List<BoardQueryEntity> findAllById(String title);
 
 }

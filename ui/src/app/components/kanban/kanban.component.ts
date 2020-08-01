@@ -3,16 +3,16 @@ import Kanban from '../model/Kanban';
 import Task from '../model/Task';
 import { KanbanService } from 'src/app/service/kanban.service';
 import { TaskService } from 'src/app/service/task.service';
-import { Route } from '@angular/compiler/src/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TaskType } from '../model/TaskType';
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+
 import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { stringify } from 'querystring';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-kanban',
@@ -20,42 +20,65 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
   styleUrls: ['./kanban.component.css'],
 })
 export class KanbanComponent implements OnInit {
-  kanban: Kanban;
+  trashIcon = faTrash;
+  editIcon = faEdit;
+
+  kanban: Kanban = {
+    title: '',
+  };
+
+  backlog: Task[] = [];
   todos: Task[] = [];
   inprogress: Task[] = [];
   done: Task[] = [];
-  default: Task[] = [
-    {
-      id: 0,
-      description: '',
-      status: null,
-    },
-  ];
+  taskModal: boolean = false;
+  default: Task = {
+    taskId: '',
+    boardTitle: '',
+    description: '',
+    taskType: TaskType.BACKLOG,
+  };
 
   private boardNames = new BehaviorSubject<string[]>([]);
   private boardNamesObserver = this.boardNames.asObservable();
 
-
   constructor(
     private kanbanService: KanbanService,
     private taskService: TaskService,
-    private router: Router
+    private actRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.kanbanService.getKanbanBoardById(1).subscribe((res) => {
-      this.kanban = res;
-      this.splitTaskByType(res);
-    });
+    var title = this.actRoute.snapshot.params.title;
+    this.kanban.title = title;
+    
+    if (title !== undefined) {
+      this.taskService.getAllTasksForBoard(title).subscribe(
+        (res: Task[]) => {
+          if (res !== null) {
+            this.kanban = {
+              title: res[0].boardTitle,
+              tasks: res,
+            };
+            this.splitTaskByType(this.kanban);
+          }
+        },
+        (error) => {
+          console.log(error.error);
+        }
+      );
+    }
   }
 
   splitTaskByType(kanban: Kanban) {
-    this.todos = kanban.tasks.filter((task) => task.status === TaskType.TODO);
-    this.inprogress = kanban.tasks.filter(
-      (task) => task.status === TaskType.INPROGRESS
+    this.todos = kanban.tasks.filter((task) => task.taskType === TaskType.TODO);
+    this.backlog = kanban.tasks.filter(
+      (task) => task.taskType === TaskType.BACKLOG
     );
-
-    if (this.inprogress.length === 0) this.inprogress = this.default;
+    this.done = kanban.tasks.filter((task) => task.taskType === TaskType.DONE);
+    this.inprogress = kanban.tasks.filter(
+      (task) => task.taskType === TaskType.INPROGRESS
+    );
   }
 
   drop(event: CdkDragDrop<Task[]>) {
@@ -66,36 +89,90 @@ export class KanbanComponent implements OnInit {
         event.currentIndex
       );
     } else {
+      let type;
+      switch (event.container.id) {
+        case 'backlog':
+          type = TaskType.BACKLOG;
+          break;
+        case 'todo':
+          type = TaskType.TODO;
+          break;
+        case 'inprogress':
+          type = TaskType.INPROGRESS;
+          break;
+        case 'done':
+          type = TaskType.DONE;
+          break;
+      }
+
+      event.previousContainer.data[event.previousIndex].taskType = type;
+
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+      var modified = event.container.data[event.currentIndex];
+      this.taskService.updateTask(modified).subscribe(console.log);
     }
-
-    if (this.inprogress.length === 0) this.inprogress = this.default;
-
-    if (this.todos.length === 0) this.todos = this.default;
-
-    if (this.done.length === 0) this.done = this.default;
   }
-
-  
-  // boards() {
-  //   this.kanbanService.boards().subscribe(inp => {
-  //       console.log('boards', typeof inp);
-  //       if (inp) {
-  //         console.log('inp', Object.values(inp));
-  //         this.kanbanService.addBoardNames(Object.values(inp));
-  //       }
-  //     }  
-  //   );
-  // }
 
   getBoardNameObserver() {
     return this.boardNamesObserver;
   }
 
-   
+  onSubmit(description: string) {
+    this.taskService
+      .createTask({
+        boardTitle: this.kanban.title,
+        description: description,
+        taskType: TaskType.BACKLOG,
+      })
+      .subscribe((res) => {
+        var op = JSON.parse(JSON.stringify(res));
+        if (op.message !== null) {
+          this.backlog.unshift({
+            taskId: op.message,
+            description: description,
+            boardTitle: this.kanban.title,
+            taskType: TaskType.BACKLOG,
+          });
+        }
+      });
+    this.default.description = '';
+  }
+
+  removeTask(data: Task[], id: string): Task[] {
+    var copy = [...data];
+    let index = copy.findIndex((tk) => tk.taskId === id);
+    copy.splice(index, 1);
+    return copy;
+  }
+
+  deleteTask(task: Task) {
+    this.taskService.deleteTask(task.taskId).subscribe((res) => {
+      if (res) {
+        switch (task.taskType) {
+          case TaskType.BACKLOG:
+            this.backlog = this.removeTask(this.backlog, task.taskId);
+            break;
+          case TaskType.TODO:
+            this.todos = this.removeTask(this.todos, task.taskId);
+            break;
+          case TaskType.INPROGRESS:
+            this.inprogress = this.removeTask(this.inprogress, task.taskId);
+            break;
+          case TaskType.DONE:
+            this.done = this.removeTask(this.done, task.taskId);
+            break;
+        }
+      }
+    });
+  }
+
+  onDelete() {
+    this.kanbanService.deleteBoard(this.kanban.title)
+                      .subscribe(alert);
+  }
 }

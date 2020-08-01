@@ -1,5 +1,6 @@
 export enum TaskType {
-    TODO,
-    INPROGRESS,
-    DONE
+    BACKLOG  = "BACKLOG",
+    TODO = "TODO",
+    INPROGRESS = "INPROGRESS",
+    DONE  = "DONE"
 }

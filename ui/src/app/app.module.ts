@@ -4,7 +4,6 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
-import { TaskComponent } from './components/task/task.component';
 import { TaskService } from './service/task.service';
 import { KanbanService } from './service/kanban.service';
 
@@ -12,8 +11,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BoardComponent } from './components/board/board.component';
 import { LoginComponent } from './components/login/login.component';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import {
+ import {
   GoogleLoginProvider,
   FacebookLoginProvider,
 } from 'angularx-social-login';
@@ -30,12 +31,19 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     KanbanComponent,
-    TaskComponent,
     NavbarComponent,
     BoardComponent,
     LoginComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, DragDropModule, SocialLoginModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    DragDropModule,
+    SocialLoginModule,
+    HttpClientModule,
+    FormsModule,
+    FontAwesomeModule
+  ],
   providers: [
     TaskService,
     KanbanService,

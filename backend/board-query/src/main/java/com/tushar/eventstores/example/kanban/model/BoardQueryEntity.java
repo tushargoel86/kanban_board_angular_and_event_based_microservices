@@ -16,8 +16,7 @@ import lombok.NoArgsConstructor;
 public class BoardQueryEntity {
 
 	@Id
-	private String id;
-	private String title;
+	private String boardTitle;
     private String createdBy;
     private LocalDate createdDate;
     private LocalDate updatedDate;

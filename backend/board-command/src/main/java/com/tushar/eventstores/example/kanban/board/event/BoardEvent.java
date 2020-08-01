@@ -8,5 +8,5 @@ import lombok.Data;
 public class BoardEvent<T> {
 
 	@TargetAggregateIdentifier
-	private final T id;
+	private final T boardTitle;
 }

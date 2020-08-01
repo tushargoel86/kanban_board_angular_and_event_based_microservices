@@ -21,15 +21,15 @@ public class BoardQueryService {
 		this.boardQueryRepository = boardQueryRepository;
 	}
 	
-    public List<Object> listBoardEvents(String id) {
-    	return eventStore.readEvents(id)
+    public List<Object> listBoardEvents(String title) {
+    	return eventStore.readEvents(title)
     					 .asStream()
     					 .map(s -> s.getPayload())
     					 .collect(Collectors.toList());
     }
 
-    public BoardQueryEntity getBoard(String id) {
-    	return boardQueryRepository.findById(id).orElse(null);
+    public List<BoardQueryEntity> getBoard(String title) {
+    	return boardQueryRepository.findAllById(title);
     }
 
 	public List<String> fetchBoards() {

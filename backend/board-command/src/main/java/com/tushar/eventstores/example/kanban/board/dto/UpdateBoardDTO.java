@@ -15,14 +15,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UpdateBoardDTO {
-
-	@NotBlank(message = "id is required")
-	private String id;
-	
-	@NotBlank(message = "title is required")
-	@Size(min = 4, max=15, message = "title must be between {min} and {max}")
-	private String title;
-
 	@NotNull(message = "date is required")
 	@JsonProperty("updatedAt")
 	@JsonFormat(pattern = "dd-MM-yyyy", shape = JsonFormat.Shape.STRING)

@@ -1,7 +1,6 @@
 import Task from './Task';
 
 export default interface Kanban {
-    id: number,
-    tasks: Task[],
+    tasks ?: Task[],
     title: string
 }

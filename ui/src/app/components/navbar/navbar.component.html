@@ -21,7 +21,9 @@
           Select Board
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" *ngFor="let name of boardNames">{{name}}</a>
+          <a class="dropdown-item" *ngFor="let name of boardNames"  href="/board/{{name}}">
+             {{name}} 
+          </a>
         </div>
       </li>
       <button (click)="signout()">log out</button>
